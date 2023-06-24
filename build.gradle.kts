@@ -21,10 +21,16 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
+	implementation("org.projectlombok:lombok-mapstruct-binding:0.2.0")
+	implementation("org.mapstruct:mapstruct:1.5.5.Final")
+	annotationProcessor("org.mapstruct:mapstruct-processor:1.5.5.Final")
 	runtimeOnly("com.h2database:h2")
+
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.projectlombok:lombok")
+	testImplementation("org.projectlombok:lombok-mapstruct-binding:0.2.0")
 	testAnnotationProcessor("org.projectlombok:lombok")
+	testAnnotationProcessor("org.mapstruct:mapstruct-processor:1.5.5.Final")
 }
 
 tasks.withType<Test> {

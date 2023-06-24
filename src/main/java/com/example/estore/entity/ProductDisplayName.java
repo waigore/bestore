@@ -1,8 +1,14 @@
 package com.example.estore.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
+@Builder
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProductDisplayName {
     @Id
     @GeneratedValue
