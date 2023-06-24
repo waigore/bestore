@@ -1,10 +1,16 @@
 package com.example.estore.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.List;
 
 @Entity
+@Builder
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProductType {
     @Id
     @GeneratedValue
@@ -14,4 +20,5 @@ public class ProductType {
 
     @OneToMany(mappedBy = "productType")
     private List<Product> products;
+
 }

@@ -1,10 +1,16 @@
 package com.example.estore.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.List;
 
 @Entity
+@Builder
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Product {
     public enum Status {
         ACTIVE, DELETED
