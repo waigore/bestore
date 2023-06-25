@@ -1,9 +1,7 @@
 package com.example.estore.mapper;
 
 import com.example.estore.dto.ProductDTO;
-import com.example.estore.dto.ProductDisplayNameDTO;
 import com.example.estore.entity.Product;
-import com.example.estore.entity.ProductDisplayName;
 import com.example.estore.entity.ProductType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

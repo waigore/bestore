@@ -3,6 +3,7 @@ package com.example.estore.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Entity
@@ -13,7 +14,11 @@ import java.util.List;
 @AllArgsConstructor
 public class Product {
     public enum Status {
-        ACTIVE, DELETED
+        ACTIVE, DELETED;
+
+        public List<String> strings() {
+            return Arrays.stream(values()).map(s -> s.toString()).toList();
+        }
     }
 
     @Id
@@ -30,9 +35,6 @@ public class Product {
 
     @Enumerated(EnumType.STRING)
     private Status status;
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private List<ProductDisplayName> displayNames;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<ProductPrice> prices;

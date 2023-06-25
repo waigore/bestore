@@ -7,8 +7,8 @@ import lombok.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductDisplayNameDTO {
+public class ProductTypeDTO {
     private Long id;
-    private String locale;
-    private String displayName;
+    private String type;
+    private String typeDisplayName;
 }

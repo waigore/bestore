@@ -15,5 +15,4 @@ public class ProductDTO {
     private String code;
     private String defaultDisplayName;
     private String status;
-    private List<ProductDisplayNameDTO> displayNames;
 }
