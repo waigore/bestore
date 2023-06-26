@@ -46,6 +46,15 @@ public class ProductService {
         if (productType == null) {
             throw new IllegalArgumentException("Product type code '" + productDTO.getProductTypeCode() + "' does not exist");
         }
+
+        if (productDTO.getCode() == null || productDTO.getCode().isBlank()) {
+            throw new IllegalArgumentException("Product code is not provided");
+        }
+
+        Product existingProduct = productRepository.findByCode(productDTO.getCode());
+        if (existingProduct != null) {
+            throw new IllegalArgumentException("Product with code '" + productDTO.getCode() + "' already exists");
+        }
     }
 
     public ProductDTO saveProduct(ProductDTO productDTO) {

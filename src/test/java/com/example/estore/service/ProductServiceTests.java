@@ -173,6 +173,26 @@ public class ProductServiceTests {
             productService.saveProduct(productDTOToSave);
         }).isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("does not exist");
+    }
+
+    @Test
+    public void testSaveProductCodeChecksWork() {
+        given(productTypeRepository.findByType("SMTV")).willReturn(allProductTypes.get(0));
+
+        String productCode = productDTOToSave.getCode();
+        given(productRepository.findByCode(productCode)).willReturn(allProducts.get(0));
+
+        productDTOToSave.setCode(null);
+        assertThatThrownBy(() -> {
+            productService.saveProduct(productDTOToSave);
+        }).isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("not provided");
+
+        productDTOToSave.setCode(productCode);
+        assertThatThrownBy(() -> {
+            productService.saveProduct(productDTOToSave);
+        }).isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("already exists");
 
     }
 }

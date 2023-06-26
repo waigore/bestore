@@ -14,11 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class Product {
     public enum Status {
-        ACTIVE, DELETED;
-
-        public List<String> strings() {
-            return Arrays.stream(values()).map(s -> s.toString()).toList();
-        }
+        ACTIVE, DELETED
     }
 
     @Id
