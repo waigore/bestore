@@ -27,6 +27,7 @@ public class ProductPrice {
     @Enumerated(EnumType.STRING)
     private Currency currency;
 
+    @Column(precision=8, scale=2)
     private BigDecimal price;
 
     private Timestamp startDateTime;

@@ -16,7 +16,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-@Sql(scripts = "classpath:db/test_data.sql")
+@Sql(scripts = "classpath:db/product_type_data.sql")
 public class ProductRepositoryTests {
     @Autowired
     private DataSource dataSource;

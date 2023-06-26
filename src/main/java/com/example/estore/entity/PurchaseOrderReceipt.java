@@ -21,6 +21,7 @@ public class PurchaseOrderReceipt {
     @JoinColumn(name = "orderId", nullable = false)
     private PurchaseOrder order;
 
+    @Column(precision=8, scale=2)
     private BigDecimal totalPrice;
 
     @OneToMany(mappedBy = "orderReceipt", cascade = CascadeType.ALL)

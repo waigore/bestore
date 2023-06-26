@@ -24,5 +24,6 @@ public class PurchaseOrderReceiptItem {
     @JoinColumn(name = "orderBasketItemId", nullable = false)
     private PurchaseOrderBasketItem orderBasketItem;
 
+    @Column(precision=8, scale=2)
     private BigDecimal itemPrice;
 }
