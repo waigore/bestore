@@ -10,5 +10,7 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
     public Product findByCode(String code);
+
+    public Product findByCodeAndStatus(String code, Product.Status status);
     public List<Product> findByProductType(ProductType productType);
 }

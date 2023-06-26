@@ -81,4 +81,25 @@ public class ProductRepositoryTests {
         assertThat(productList).isNotEmpty();
         assertThat(productList).hasSize(1);
     }
+
+    @Test
+    void testFindProductsByCodeAndStatusWorks() {
+        ProductType smartphoneProductType = productTypeRepository.findByType("PHON");
+
+        String productCode = "IPHONE_15_BLACK";
+        Product product = Product.builder()
+                .code(productCode)
+                .defaultDisplayName("iPhone 15 Black")
+                .status(Product.Status.ACTIVE)
+                .productType(smartphoneProductType)
+                .build();
+        productRepository.save(product);
+
+        Product foundProduct = productRepository.findByCodeAndStatus("IPHONE_15_BLACK", Product.Status.ACTIVE);
+        assertThat(foundProduct).isNotNull();
+        assertThat(foundProduct.getCode()).isEqualTo(productCode);
+
+        foundProduct = productRepository.findByCodeAndStatus("IPHONE_15_BLACK", Product.Status.DELETED);
+        assertThat(foundProduct).isNull();
+    }
 }

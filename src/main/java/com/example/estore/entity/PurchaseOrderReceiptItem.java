@@ -16,13 +16,11 @@ public class PurchaseOrderReceiptItem {
     @GeneratedValue
     private Long id;
 
+    private String orderBasketItemReference;
+
     @ManyToOne
     @JoinColumn(name = "orderReceiptId", nullable = false)
     private PurchaseOrderReceipt orderReceipt;
-
-    @OneToOne
-    @JoinColumn(name = "orderBasketItemId", nullable = false)
-    private PurchaseOrderBasketItem orderBasketItem;
 
     @Column(precision=8, scale=2)
     private BigDecimal itemPrice;

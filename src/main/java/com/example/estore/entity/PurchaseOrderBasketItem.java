@@ -14,12 +14,11 @@ public class PurchaseOrderBasketItem {
     @GeneratedValue
     private Long id;
 
+    private String itemReference;
+
     @ManyToOne
     @JoinColumn(name = "orderBasketId", nullable = false)
     private PurchaseOrderBasket orderBasket;
-
-    @OneToOne(mappedBy = "orderBasketItem")
-    private PurchaseOrderReceiptItem orderReceiptItem;
 
     private String productCode;
 
