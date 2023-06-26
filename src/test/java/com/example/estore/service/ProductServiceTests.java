@@ -1,8 +1,10 @@
 package com.example.estore.service;
 
 import com.example.estore.dto.ProductDTO;
+import com.example.estore.dto.ProductPriceDTO;
 import com.example.estore.dto.ProductTypeDTO;
 import com.example.estore.entity.Product;
+import com.example.estore.entity.ProductPrice;
 import com.example.estore.entity.ProductType;
 import com.example.estore.repository.ProductRepository;
 import com.example.estore.repository.ProductTypeRepository;
@@ -117,6 +119,44 @@ public class ProductServiceTests {
 
         Product product = myProducts.get(0);
         assertThat(product.getId()).isEqualTo(1L);
+    }
+
+    @Test
+    public void testSaveProductWithPricesWorks() {
+        List<Product> myProducts = new ArrayList();
+        given(productTypeRepository.findByType("SMTV")).willReturn(allProductTypes.get(0));
+        given(productRepository.save(any())).willAnswer(i -> {
+            Product p = i.getArgument(0);
+            if (p.getId() == null)
+                p.setId((long)(myProducts.size()+1));
+            myProducts.add(p);
+            return p;
+        });
+
+        productDTOToSave = ProductDTO.builder()
+                .code("LG_TV_01_WHITE")
+                .productTypeCode("SMTV")
+                .defaultDisplayName("LG Smart TV White")
+                .prices(List.of(
+                        ProductPriceDTO.builder()
+                                .price("5000.00")
+                                .currency("HKD")
+                                .startDateTime("2023-05-01 00:00:00")
+                                .endDateTime("2023-08-31 23:59:59")
+                                .build()
+                ))
+                .status(Product.Status.ACTIVE.toString())
+                .build();
+
+        productService.saveProduct(productDTOToSave);
+        assertThat(myProducts).hasSize(1);
+
+        Product product = myProducts.get(0);
+        assertThat(product.getPrices()).hasSize(1);
+
+        ProductPrice productPrice = product.getPrices().get(0);
+        assertThat(productPrice.getPrice().toString()).isEqualTo("5000.00");
+        assertThat(productPrice.getCurrency()).isEqualTo(ProductPrice.Currency.HKD);
     }
 
     @Test

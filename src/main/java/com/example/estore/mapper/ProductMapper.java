@@ -1,8 +1,10 @@
 package com.example.estore.mapper;
 
 import com.example.estore.dto.ProductDTO;
+import com.example.estore.dto.ProductPriceDTO;
 import com.example.estore.dto.ProductTypeDTO;
 import com.example.estore.entity.Product;
+import com.example.estore.entity.ProductPrice;
 import com.example.estore.entity.ProductType;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -16,4 +18,7 @@ public interface ProductMapper {
     ProductDTO entityToDto(Product product);
 
     ProductTypeDTO entityToDto(ProductType productType);
+
+    @Mapping(target="productId", source="productPrice.product.id")
+    ProductPriceDTO entityToDto(ProductPrice productPrice);
 }
