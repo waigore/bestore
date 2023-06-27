@@ -10,6 +10,7 @@ import com.example.estore.repository.ProductRepository;
 import com.example.estore.repository.ProductTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
@@ -57,6 +58,7 @@ public class ProductService {
         }
     }
 
+    @Transactional
     public ProductDTO saveProduct(ProductDTO productDTO) {
         ProductType productType = productTypeRepository.findByType(productDTO.getProductTypeCode());
 
