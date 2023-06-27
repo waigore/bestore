@@ -54,4 +54,15 @@ public class ProductDiscountController {
                 .body(productDiscountService.createDiscount(productDiscount))
                 .build();
     }
+
+    @DeleteMapping("{code}")
+    public ResponseEntity<APIResponseDTO<String>> deleteDiscount(@PathVariable String code) {
+        try {
+            productDiscountService.deleteDiscount(code);
+            return ResponseEntity.ok(APIResponseDTO.<String>builder().build());
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+
+    }
 }

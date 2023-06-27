@@ -79,4 +79,12 @@ public class ProductDiscountService {
         ProductDiscount savedProductDiscount = productDiscountRepository.save(productDiscount);
         return productMapper.entityToDto(savedProductDiscount);
     }
+
+    public void deleteDiscount(String code) {
+        ProductDiscount productDiscount = productDiscountRepository.findByCode(code);
+        if (productDiscount == null) {
+            throw new IllegalArgumentException("No such discount code '" + "'");
+        }
+        productDiscountRepository.delete(productDiscount);
+    }
 }
