@@ -22,6 +22,9 @@ public class PurchaseOrderReceiptItem {
     @JoinColumn(name = "orderReceiptId", nullable = false)
     private PurchaseOrderReceipt orderReceipt;
 
+    @OneToOne(mappedBy = "orderReceiptItem", cascade = CascadeType.ALL)
+    private PurchaseOrderReceiptItemDiscount discount;
+
     @Column(precision=8, scale=2)
     private BigDecimal itemPrice;
 }

@@ -73,7 +73,75 @@ public class PurchaseOrderService {
                 .orderBasketItemReference(purchaseOrderBasketItem.getItemReference())
                 .itemPrice(price.multiply(BigDecimal.valueOf(purchaseOrderBasketItem.getQuantity())))
                 .build();
+
+        calculateDiscountForItem(product, productPrice, purchaseOrderBasketItem, purchaseOrderReceiptItem);
+
         return purchaseOrderReceiptItem;
+    }
+
+    private void calculateDiscountForItem(
+            Product product,
+            ProductPrice productPrice,
+            PurchaseOrderBasketItem basketItem,
+            PurchaseOrderReceiptItem receiptItem) {
+        if (CollectionUtils.isEmpty(product.getDiscounts())) {
+            return;
+        }
+
+        BigDecimal discountedAmount = null;
+        PurchaseOrderReceiptItemDiscount itemDiscount = null;
+        BigDecimal price = productPrice.getPrice();
+        Timestamp now = Timestamp.from(Instant.now());
+
+        ProductDiscount productDiscount = product.getDiscounts().stream().filter(discount -> {
+            if (now.after(discount.getEndDateTime()) || now.before(discount.getStartDateTime()))
+                return false;
+            if (discount.getAppliedNumber() > basketItem.getQuantity())
+                return false;
+            return true;
+        }).findFirst().orElse(null);
+        if (productDiscount == null) {
+            return;
+        }
+
+        Integer percentage = productDiscount.getPercentage();
+        BigDecimal flatDiscountAmount = productDiscount.getAmount();
+        int multiplier;
+
+        if (productDiscount.getLineDiscount()) {
+            multiplier = basketItem.getQuantity();
+        }
+        else {
+            multiplier = basketItem.getQuantity()
+                    / productDiscount.getAppliedNumber()
+                    * productDiscount.getAppliedTimes();
+        }
+
+        if (percentage > 0) {
+            discountedAmount = price
+                    .multiply(BigDecimal.valueOf(percentage))
+                    .divide(BigDecimal.valueOf(100))
+                    .multiply(BigDecimal.valueOf(multiplier));
+        }
+        else {
+            discountedAmount = price.subtract(flatDiscountAmount)
+                    .multiply(BigDecimal.valueOf(multiplier));
+        }
+
+        if (discountedAmount.equals(BigDecimal.ZERO)) {
+            return;
+        }
+
+        if (receiptItem.getItemPrice().compareTo(discountedAmount) < 0) {
+            discountedAmount = receiptItem.getItemPrice();
+        }
+        itemDiscount = PurchaseOrderReceiptItemDiscount.builder()
+                .orderReceiptItem(receiptItem)
+                .productDiscountCode(productDiscount.getCode())
+                .discountedAmount(discountedAmount)
+                .build();
+        receiptItem.setItemPrice(receiptItem.getItemPrice().subtract(discountedAmount));
+        receiptItem.setDiscount(itemDiscount);
     }
 
     @Transactional

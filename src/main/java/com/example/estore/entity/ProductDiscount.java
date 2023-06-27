@@ -30,6 +30,7 @@ public class ProductDiscount {
 
     private Integer percentage;
 
+    @Column(precision=8, scale=2)
     private BigDecimal amount;
 
     private Integer appliedNumber;

@@ -17,4 +17,6 @@ public interface PurchaseOrderMapper {
     PurchaseOrderReceiptDTO entityToDto(PurchaseOrderReceipt purchaseReceipt);
 
     PurchaseOrderReceiptItemDTO entityToDto(PurchaseOrderReceiptItem purchaseOrderReceiptItem);
+
+    PurchaseOrderReceiptItemDiscountDTO entityToDto(PurchaseOrderReceiptItemDiscount purchaseOrderReceiptItemDiscount);
 }
