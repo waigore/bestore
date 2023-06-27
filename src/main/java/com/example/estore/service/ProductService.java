@@ -8,10 +8,11 @@ import com.example.estore.entity.ProductType;
 import com.example.estore.mapper.ProductMapper;
 import com.example.estore.repository.ProductRepository;
 import com.example.estore.repository.ProductTypeRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -20,6 +21,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ProductService.class);
     @Autowired
     private ProductRepository productRepository;
 
@@ -31,6 +34,11 @@ public class ProductService {
 
     public List<ProductDTO> getAllProducts() {
         List<Product> products = productRepository.findAll();
+        return products.stream().map(p -> productMapper.entityToDto(p)).collect(Collectors.toList());
+    }
+
+    public List<ProductDTO> getAllActiveProducts() {
+        List<Product> products = productRepository.findActiveProducts();
         return products.stream().map(p -> productMapper.entityToDto(p)).collect(Collectors.toList());
     }
 

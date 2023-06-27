@@ -102,4 +102,30 @@ public class ProductRepositoryTests {
         foundProduct = productRepository.findByCodeAndStatus("IPHONE_15_BLACK", Product.Status.DELETED);
         assertThat(foundProduct).isNull();
     }
+
+    @Test
+    void testFindActiveProductsWorks() {
+        ProductType smartphoneProductType = productTypeRepository.findByType("PHON");
+
+        String productCode = "IPHONE_15_BLACK";
+        Product product = Product.builder()
+                .code(productCode)
+                .defaultDisplayName("iPhone 15 Black")
+                .status(Product.Status.ACTIVE)
+                .productType(smartphoneProductType)
+                .build();
+        productRepository.save(product);
+
+        String productCode2 = "IPHONE_15_WHITE";
+        Product product2 = Product.builder()
+                .code(productCode2)
+                .defaultDisplayName("iPhone 15 White")
+                .status(Product.Status.DELETED)
+                .productType(smartphoneProductType)
+                .build();
+        productRepository.save(product2);
+
+        List<Product> products = productRepository.findActiveProducts();
+        assertThat(products).hasSize(1);
+    }
 }

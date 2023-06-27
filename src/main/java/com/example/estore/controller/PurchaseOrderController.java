@@ -3,6 +3,7 @@ package com.example.estore.controller;
 import com.example.estore.dto.CreatePurchaseOrderDTO;
 import com.example.estore.dto.PurchaseOrderDTO;
 import com.example.estore.dto.UpdatePurchaseOrderDTO;
+import com.example.estore.dto.api.APIResponseDTO;
 import com.example.estore.service.PurchaseOrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,34 +22,58 @@ public class PurchaseOrderController {
     private PurchaseOrderService purchaseOrderService;
 
     @GetMapping("{identifier}")
-    public ResponseEntity<PurchaseOrderDTO> findByOrderIdentifier(@PathVariable("identifier") String identifier) {
+    public ResponseEntity<APIResponseDTO<PurchaseOrderDTO>> findByOrderIdentifier(@PathVariable("identifier") String identifier) {
         try {
-            return ResponseEntity.ok(purchaseOrderService.findByOrderIdentifier(identifier));
-        } catch (IllegalArgumentException | IllegalStateException e) {
+            return ResponseEntity.ok(
+                    APIResponseDTO.<PurchaseOrderDTO>builder()
+                            .body(purchaseOrderService.findByOrderIdentifier(identifier))
+                            .build()
+            );
+        } catch (Exception e) {
             LOG.error("Exception finding order by identifier", e);
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.badRequest()
+                    .body(APIResponseDTO.<PurchaseOrderDTO>builder()
+                            .status(APIResponseDTO.Status.ERROR)
+                            .errorMessage(e.getMessage())
+                            .build());
         }
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<PurchaseOrderDTO> createOrder(@RequestBody CreatePurchaseOrderDTO createPurchaseOrder) {
+    public ResponseEntity<APIResponseDTO<PurchaseOrderDTO>> createOrder(@RequestBody CreatePurchaseOrderDTO createPurchaseOrder) {
         try {
-            return ResponseEntity.ok(purchaseOrderService.createOrder(createPurchaseOrder));
-        } catch (IllegalArgumentException | IllegalStateException e) {
+            return ResponseEntity.ok(
+                    APIResponseDTO.<PurchaseOrderDTO>builder()
+                        .body(purchaseOrderService.createOrder(createPurchaseOrder))
+                        .build()
+            );
+        } catch (Exception e) {
             LOG.error("Exception creating order", e);
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest()
+                    .body(APIResponseDTO.<PurchaseOrderDTO>builder()
+                            .status(APIResponseDTO.Status.ERROR)
+                            .errorMessage(e.getMessage())
+                            .build());
         }
     }
 
     @PutMapping("{identifier}")
-    public ResponseEntity<PurchaseOrderDTO> updateOrder(@PathVariable("identifier") String orderIdentifier,
+    public ResponseEntity<APIResponseDTO<PurchaseOrderDTO>> updateOrder(@PathVariable("identifier") String orderIdentifier,
                                                         @RequestBody UpdatePurchaseOrderDTO updatePurchaseOrder) {
         try {
-            return ResponseEntity.ok(purchaseOrderService.updateOrder(orderIdentifier, updatePurchaseOrder));
-        } catch (IllegalArgumentException | IllegalStateException e) {
+            return ResponseEntity.ok(
+                    APIResponseDTO.<PurchaseOrderDTO>builder()
+                            .body(purchaseOrderService.updateOrder(orderIdentifier, updatePurchaseOrder))
+                            .build()
+            );
+        } catch (Exception e) {
             LOG.error("Exception updating order", e);
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest()
+                    .body(APIResponseDTO.<PurchaseOrderDTO>builder()
+                            .status(APIResponseDTO.Status.ERROR)
+                            .errorMessage(e.getMessage())
+                            .build());
         }
     }
 }

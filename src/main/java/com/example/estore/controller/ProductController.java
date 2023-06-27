@@ -1,6 +1,7 @@
 package com.example.estore.controller;
 
 import com.example.estore.dto.ProductDTO;
+import com.example.estore.dto.api.APIResponseDTO;
 import com.example.estore.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,13 +17,22 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping
-    public List<ProductDTO> getAllProducts() {
-        return productService.getAllProducts();
+    public APIResponseDTO<List<ProductDTO>> getAllProducts() {
+        return APIResponseDTO.<List<ProductDTO>>builder()
+                .body(productService.getAllProducts()).build();
+    }
+
+    @GetMapping("/active")
+    public APIResponseDTO<List<ProductDTO>> getAllActiveProducts() {
+        return APIResponseDTO.<List<ProductDTO>>builder()
+                .body(productService.getAllActiveProducts()).build();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ProductDTO createProduct(@RequestBody ProductDTO product) {
-        return productService.saveProduct(product);
+    public APIResponseDTO<ProductDTO> createProduct(@RequestBody ProductDTO product) {
+        return APIResponseDTO.<ProductDTO>builder()
+                        .body(productService.saveProduct(product))
+                .build();
     }
 }

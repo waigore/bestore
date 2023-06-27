@@ -14,8 +14,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,10 +32,12 @@ import static org.mockito.BDDMockito.given;
 @SpringBootTest
 public class ProductServiceTests {
 
-    @Mock
+    private static final Logger LOG = LoggerFactory.getLogger(ProductServiceTests.class);
+
+    @MockBean
     private ProductRepository productRepository;
 
-    @Mock
+    @MockBean
     private ProductTypeRepository productTypeRepository;
 
     @InjectMocks
@@ -64,6 +69,12 @@ public class ProductServiceTests {
                         .productType(allProductTypes.get(0))
                         .defaultDisplayName("Samsung Smart TV Grey")
                         .status(Product.Status.ACTIVE)
+                        .build(),
+                Product.builder()
+                        .code("SAMSUNG_TV_01_RED")
+                        .productType(allProductTypes.get(0))
+                        .defaultDisplayName("Samsung Smart TV Red")
+                        .status(Product.Status.DELETED)
                         .build()
         );
 
@@ -77,16 +88,28 @@ public class ProductServiceTests {
 
     @Test
     public void testGetAllProductsWorks() {
-        given(productRepository.findAll()).willReturn(allProducts);
+        given(productRepository.findAll()).willAnswer(i -> {
+            return allProducts;
+        });
+
+        given(productRepository.findActiveProducts()).willAnswer(i -> {
+            return allProducts.stream().filter(p -> p.getStatus() == Product.Status.ACTIVE).toList();
+        });
 
         List<ProductDTO> allProductDTOs = productService.getAllProducts();
         assertThat(allProductDTOs).isNotEmpty();
-        assertThat(allProductDTOs).hasSize(1);
+        assertThat(allProductDTOs).hasSize(2);
 
-        ProductDTO productDTO = allProductDTOs.get(0);
+        ProductDTO productDTO = allProductDTOs.stream().filter(p ->
+                p.getCode().equals("SAMSUNG_TV_01_GREY")
+        ).findFirst().orElse(null);
         assertThat(productDTO.getStatus()).isEqualTo(Product.Status.ACTIVE.toString());
         assertThat(productDTO.getCode()).isEqualTo("SAMSUNG_TV_01_GREY");
         assertThat(productDTO.getProductTypeCode()).isEqualTo("SMTV");
+
+        List<ProductDTO> activeProductDTOs = productService.getAllActiveProducts();
+        assertThat(activeProductDTOs).isNotEmpty();
+        assertThat(activeProductDTOs).hasSize(1);
     }
 
     @Test
@@ -134,9 +157,9 @@ public class ProductServiceTests {
         });
 
         productDTOToSave = ProductDTO.builder()
-                .code("LG_TV_01_WHITE")
+                .code("LG_TV_01_GREEN")
                 .productTypeCode("SMTV")
-                .defaultDisplayName("LG Smart TV White")
+                .defaultDisplayName("LG Smart TV Green")
                 .prices(List.of(
                         ProductPriceDTO.builder()
                                 .price("5000.00")

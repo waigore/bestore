@@ -2,6 +2,8 @@ package com.example.estore.service;
 
 import com.example.estore.dto.*;
 import com.example.estore.entity.*;
+import com.example.estore.exception.BaseException;
+import com.example.estore.exception.NoSuchObjectException;
 import com.example.estore.mapper.PurchaseOrderMapper;
 import com.example.estore.repository.ProductRepository;
 import com.example.estore.repository.PurchaseOrderRepository;
@@ -96,7 +98,7 @@ public class PurchaseOrderService {
         createPurchaseOrder.getOrderItems().forEach(item -> {
             Product product = productRepository.findByCodeAndStatus(item.getProductCode(), Product.Status.ACTIVE);
             if (product == null) {
-                throw new IllegalStateException("No active product with code '" + item.getProductCode() + "'");
+                throw new NoSuchObjectException("No active product with code '" + item.getProductCode() + "'");
             }
 
             PurchaseOrderBasketItem purchaseOrderBasketItem = newOrderBasketItem(item, purchaseOrder.getOrderBasket());
@@ -130,7 +132,7 @@ public class PurchaseOrderService {
 
         PurchaseOrder purchaseOrder = purchaseOrderRepository.findByOrderIdentifier(orderIdentifier);
         if (purchaseOrder == null) {
-            throw new IllegalArgumentException("No order with identifier '" + orderIdentifier + "' found");
+            throw new NoSuchObjectException("No order with identifier '" + orderIdentifier + "' found");
         }
 
         if (!CollectionUtils.isEmpty(updatePurchaseOrder.getDeletedItems())) {
@@ -138,12 +140,12 @@ public class PurchaseOrderService {
                 PurchaseOrderBasketItem basketItem = purchaseOrder.getOrderBasket().getItems().stream().filter(bi ->
                         bi.getItemReference().equals(deletedItem.getItemReference())).findFirst().orElse(null);
                 if (basketItem == null) {
-                    throw new IllegalStateException("No such basket item with reference '" + deletedItem.getItemReference() + "'");
+                    throw new NoSuchObjectException("No such basket item with reference '" + deletedItem.getItemReference() + "'");
                 }
                 PurchaseOrderReceiptItem receiptItem = purchaseOrder.getOrderReceipt().getItems().stream().filter(ri ->
                         ri.getOrderBasketItemReference().equals(deletedItem.getItemReference())).findFirst().orElse(null);
                 if (receiptItem == null) {
-                    throw new IllegalStateException("No such receipt item with reference '" + deletedItem.getItemReference() + "'");
+                    throw new NoSuchObjectException("No such receipt item with reference '" + deletedItem.getItemReference() + "'");
                 }
 
                 purchaseOrder.getOrderBasket().getItems().remove(basketItem);
@@ -155,7 +157,7 @@ public class PurchaseOrderService {
             updatePurchaseOrder.getAddedItems().forEach(addedItem -> {
                 Product product = productRepository.findByCodeAndStatus(addedItem.getProductCode(), Product.Status.ACTIVE);
                 if (product == null) {
-                    throw new IllegalStateException("No active product with code '" + addedItem.getProductCode() + "'");
+                    throw new NoSuchObjectException("No active product with code '" + addedItem.getProductCode() + "'");
                 }
 
                 PurchaseOrderBasketItem purchaseOrderBasketItem = newOrderBasketItem(addedItem, purchaseOrder.getOrderBasket());

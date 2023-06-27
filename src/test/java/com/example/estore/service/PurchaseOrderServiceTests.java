@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -23,7 +24,7 @@ import static org.mockito.BDDMockito.given;
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest
 public class PurchaseOrderServiceTests {
-    @Mock
+    @MockBean
     private PurchaseOrderRepository purchaseOrderRepository;
 
     @InjectMocks
