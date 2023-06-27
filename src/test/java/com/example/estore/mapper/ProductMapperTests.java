@@ -1,8 +1,10 @@
 package com.example.estore.mapper;
 
 import com.example.estore.dto.ProductDTO;
+import com.example.estore.dto.ProductDiscountDTO;
 import com.example.estore.dto.ProductPriceDTO;
 import com.example.estore.entity.Product;
+import com.example.estore.entity.ProductDiscount;
 import com.example.estore.entity.ProductPrice;
 import com.example.estore.entity.ProductType;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,7 +51,7 @@ public class ProductMapperTests {
     }
 
     @Test
-    void testMappingProductPriesWorks() {
+    void testMappingProductPricesWorks() {
         ProductPrice productPrice = ProductPrice.builder()
                 .product(product)
                 .currency(ProductPrice.Currency.HKD)
@@ -59,9 +61,27 @@ public class ProductMapperTests {
                 .build();
 
         ProductPriceDTO productPriceDTO = productMapper.entityToDto(productPrice);
-        assertThat(productPriceDTO.getProductId()).isEqualTo(product.getId());
         assertThat(productPriceDTO.getCurrency()).isEqualTo(ProductPrice.Currency.HKD.toString());
         assertThat(productPriceDTO.getStartDateTime()).isEqualTo("2023-05-01T00:00:00.000+08:00");
         assertThat(productPriceDTO.getEndDateTime()).isEqualTo("2023-08-31T23:59:59.000+08:00");
+    }
+
+    @Test
+    void testMappingProductDiscountsWorks() {
+        ProductDiscount productDiscount = ProductDiscount.builder()
+                .product(product)
+                .code("50OFF")
+                .percentage(50)
+                .appliedNumber(1)
+                .appliedTimes(1)
+                .startDateTime(Timestamp.valueOf("2023-05-01 00:00:00"))
+                .endDateTime(Timestamp.valueOf("2023-08-31 23:59:59"))
+                .build();
+
+        ProductDiscountDTO productDiscountDTO = productMapper.entityToDto(productDiscount);
+        assertThat(productDiscountDTO.getProductCode()).isEqualTo(product.getCode());
+        assertThat(productDiscountDTO.getStartDateTime()).isEqualTo("2023-05-01T00:00:00.000+08:00");
+        assertThat(productDiscountDTO.getEndDateTime()).isEqualTo("2023-08-31T23:59:59.000+08:00");
+
     }
 }

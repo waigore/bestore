@@ -2,6 +2,7 @@ package com.example.estore.controller;
 
 import com.example.estore.dto.ProductDTO;
 import com.example.estore.entity.Product;
+import com.example.estore.service.ProductDiscountService;
 import com.example.estore.service.ProductService;
 import com.example.estore.service.PurchaseOrderService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,6 +33,9 @@ public class ProductControllerTests {
 
     @MockBean
     private PurchaseOrderService purchaseOrderService;
+
+    @MockBean
+    private ProductDiscountService productDiscountService;
 
     @Autowired
     ObjectMapper objectMapper;

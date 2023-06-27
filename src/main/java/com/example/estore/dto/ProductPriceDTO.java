@@ -11,8 +11,6 @@ import lombok.*;
 public class ProductPriceDTO {
     @JsonIgnore
     private Long id;
-    @JsonIgnore
-    private Long productId;
     private String currency;
     private String price;
     private String startDateTime;

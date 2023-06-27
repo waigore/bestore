@@ -23,11 +23,10 @@ public class ProductDiscount {
 
     private String code;
 
+    @Builder.Default
+    private Boolean lineDiscount = false;
+
     private String description;
-
-    private Boolean autoApplied;
-
-    private Boolean lineDiscount;
 
     private Integer percentage;
 

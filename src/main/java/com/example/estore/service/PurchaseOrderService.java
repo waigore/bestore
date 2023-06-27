@@ -36,7 +36,7 @@ public class PurchaseOrderService {
     public PurchaseOrderDTO findByOrderIdentifier(String orderIdentifier) {
         PurchaseOrder purchaseOrder = purchaseOrderRepository.findByOrderIdentifier(orderIdentifier);
         if (purchaseOrder == null) {
-            throw new IllegalArgumentException("No such order identifier: '" + orderIdentifier + "'");
+            throw new NoSuchObjectException("No such order identifier: '" + orderIdentifier + "'");
         }
 
         return purchaseOrderMapper.entityToDto(purchaseOrder);
@@ -64,8 +64,8 @@ public class PurchaseOrderService {
             PurchaseOrderBasketItem purchaseOrderBasketItem,
             Product product) {
         ProductPrice productPrice = product.getPrices().stream().filter(price ->
-                        (price.getEndDateTime() == null || Timestamp.from(Instant.now()).before(price.getEndDateTime())) &&
-                                price.getStartDateTime() == null || Timestamp.from(Instant.now()).after(price.getStartDateTime()))
+                        Timestamp.from(Instant.now()).before(price.getEndDateTime()) &&
+                                Timestamp.from(Instant.now()).after(price.getStartDateTime()))
                 .findFirst().orElse(null);
         BigDecimal price = productPrice != null ? productPrice.getPrice() : new BigDecimal(0);
         PurchaseOrderReceiptItem purchaseOrderReceiptItem = PurchaseOrderReceiptItem.builder()

@@ -21,8 +21,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
-
-    private static final Logger LOG = LoggerFactory.getLogger(ProductService.class);
     @Autowired
     private ProductRepository productRepository;
 
