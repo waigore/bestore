@@ -56,10 +56,10 @@ public class ProductDiscountService {
 
         BigDecimal productDiscountAmount = productDiscountDTO.getAmount() != null ?
                 new BigDecimal(productDiscountDTO.getAmount()) : null;
-        if (productDiscountDTO.getPercentage() != 0 && productDiscountAmount != null) {
+        if ((productDiscountDTO.getPercentage() != null && productDiscountDTO.getPercentage() != 0) && productDiscountAmount != null) {
             throw new IllegalArgumentException("Discount percentage and amount cannot be both defined");
         }
-        else if (productDiscountDTO.getPercentage() == 0 && productDiscountAmount == null) {
+        else if ((productDiscountDTO.getPercentage() == null || productDiscountDTO.getPercentage() == 0) && productDiscountAmount == null) {
             throw new IllegalArgumentException("Either discount percentage or amount should be defined");
         }
 

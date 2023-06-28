@@ -1,8 +1,10 @@
 package com.example.estore.service;
 
-import com.example.estore.dto.*;
+import com.example.estore.dto.CreatePurchaseOrderDTO;
+import com.example.estore.dto.CreatePurchaseOrderItemDTO;
+import com.example.estore.dto.PurchaseOrderDTO;
+import com.example.estore.dto.UpdatePurchaseOrderDTO;
 import com.example.estore.entity.*;
-import com.example.estore.exception.BaseException;
 import com.example.estore.exception.NoSuchObjectException;
 import com.example.estore.mapper.PurchaseOrderMapper;
 import com.example.estore.repository.ProductRepository;
@@ -117,14 +119,14 @@ public class PurchaseOrderService {
                     * productDiscount.getAppliedTimes();
         }
 
-        if (percentage > 0) {
+        if (percentage != null && percentage > 0) {
             discountedAmount = price
                     .multiply(BigDecimal.valueOf(percentage))
                     .divide(BigDecimal.valueOf(100))
                     .multiply(BigDecimal.valueOf(multiplier));
         }
         else {
-            discountedAmount = price.subtract(flatDiscountAmount)
+            discountedAmount = flatDiscountAmount
                     .multiply(BigDecimal.valueOf(multiplier));
         }
 

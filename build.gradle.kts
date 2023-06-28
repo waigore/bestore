@@ -2,6 +2,7 @@ plugins {
 	java
 	id("org.springframework.boot") version "3.1.1"
 	id("io.spring.dependency-management") version "1.1.0"
+	jacoco
 }
 
 group = "com.example"
@@ -35,4 +36,36 @@ dependencies {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+
+tasks.test {
+	finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
+}
+tasks.jacocoTestReport {
+	dependsOn(tasks.test) // tests are required to run before generating the report
+}
+
+tasks.withType<JacocoCoverageVerification> {
+	afterEvaluate {
+		classDirectories.setFrom(files(classDirectories.files.map {
+			fileTree(it).apply {
+				exclude("com/example/estore/mapper/**")
+				exclude("com/example/estore/dto/**")
+				exclude("com/example/estore/entity/**")
+			}
+		}))
+	}
+}
+
+tasks.withType<JacocoReport> {
+	afterEvaluate {
+		classDirectories.setFrom(files(classDirectories.files.map {
+			fileTree(it).apply {
+				exclude("com/example/estore/mapper/**")
+				exclude("com/example/estore/dto/**")
+				exclude("com/example/estore/entity/**")
+			}
+		}))
+	}
 }
