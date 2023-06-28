@@ -126,6 +126,26 @@ public class ProductServiceTests {
     }
 
     @Test
+    public void testDeleteProductWorks() {
+        Product myProduct = Product.builder()
+                .code("SAMSUNG_TV_01_GREY")
+                .productType(allProductTypes.get(0))
+                .defaultDisplayName("Samsung Smart TV Grey")
+                .status(Product.Status.ACTIVE)
+                .build();
+        given(productRepository.save(any())).willAnswer(i -> {
+            Product savedProduct = i.getArgument(0);
+            myProduct.setStatus(savedProduct.getStatus());
+            return myProduct;
+        });
+        given(productRepository.findByCode(any())).willReturn(myProduct);
+
+        productService.deleteProduct(myProduct.getCode());
+        assertThat(myProduct.getStatus()).isEqualTo(Product.Status.DELETED);
+
+    }
+
+    @Test
     public void testSaveProductWorks() {
         List<Product> myProducts = new ArrayList();
         given(productTypeRepository.findByType("SMTV")).willReturn(allProductTypes.get(0));

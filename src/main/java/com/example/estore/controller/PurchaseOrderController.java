@@ -41,21 +41,10 @@ public class PurchaseOrderController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<APIResponseDTO<PurchaseOrderDTO>> createOrder(@RequestBody CreatePurchaseOrderDTO createPurchaseOrder) {
-        try {
-            return ResponseEntity.ok(
-                    APIResponseDTO.<PurchaseOrderDTO>builder()
-                        .body(purchaseOrderService.createOrder(createPurchaseOrder))
-                        .build()
-            );
-        } catch (Exception e) {
-            LOG.error("Exception creating order", e);
-            return ResponseEntity.badRequest()
-                    .body(APIResponseDTO.<PurchaseOrderDTO>builder()
-                            .status(APIResponseDTO.Status.ERROR)
-                            .errorMessage(e.getMessage())
-                            .build());
-        }
+    public APIResponseDTO<PurchaseOrderDTO> createOrder(@RequestBody CreatePurchaseOrderDTO createPurchaseOrder) {
+        return APIResponseDTO.<PurchaseOrderDTO>builder()
+                .body(purchaseOrderService.createOrder(createPurchaseOrder))
+                .build();
     }
 
     @PutMapping("{identifier}")

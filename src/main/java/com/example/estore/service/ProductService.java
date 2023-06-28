@@ -65,6 +65,22 @@ public class ProductService {
     }
 
     @Transactional
+    public void deleteProduct(String code) {
+        Product product = productRepository.findByCode(code);
+
+        if (product == null) {
+            throw new IllegalArgumentException("No such product with code '" + code + "'");
+        }
+
+        if (product.getStatus().equals(Product.Status.DELETED)) {
+            throw new IllegalStateException("Product '" + code + "' already deleted");
+        }
+
+        product.setStatus(Product.Status.DELETED);
+        productRepository.save(product);
+    }
+
+    @Transactional
     public ProductDTO saveProduct(ProductDTO productDTO) {
         ProductType productType = productTypeRepository.findByType(productDTO.getProductTypeCode());
 
