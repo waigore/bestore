@@ -69,3 +69,7 @@ tasks.withType<JacocoReport> {
 		}))
 	}
 }
+
+tasks.named<org.springframework.boot.gradle.tasks.bundling.BootBuildImage>("bootBuildImage") {
+	imageName.set("ghcr.io/waigore/${project.name}:${project.version}")
+}
