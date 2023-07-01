@@ -14,7 +14,10 @@ jobs:
         name: Set up gradle
         uses: gradle/gradle-build-action@v2
       -
-        name: run build with gradle wrapper
+        name: Run build with gradle wrapper
+        run: ./gradlew build
+      -
+        name: Build docker image
         run: ./gradlew bootBuildImage
       -
         name: Login to GHCR
