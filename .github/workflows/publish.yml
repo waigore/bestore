@@ -11,6 +11,12 @@ jobs:
         name: Checkout
         uses: actions/checkout@v3
       -
+        name: Set up gradle
+        uses: gradle/gradle-build-action@v2
+      -
+        name: run build with gradle wrapper
+        run: ./gradlew bootBuildImage
+      -
         name: Login to GHCR
         uses: docker/login-action@v2
         with:
