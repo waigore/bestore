@@ -32,5 +32,5 @@ jobs:
       -
         name: Build and push docker image
         run:
-          docker build . --tag ghcr.io/waigore/bestore:latest
+          docker build -t ghcr.io/waigore/bestore:latest .
           docker push ghcr.io/waigore/bestore:latest
