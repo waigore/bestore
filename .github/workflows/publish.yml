@@ -23,9 +23,6 @@ jobs:
         name: Run build with gradle wrapper
         run: ./gradlew build
       -
-        name: Build docker image
-        run: ./gradlew bootBuildImage
-      -
         name: Login to GHCR
         uses: docker/login-action@v2
         with:
@@ -33,8 +30,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       -
-        name: Build and push
-        uses: docker/build-push-action@v4
-        with:
-          push: true
-          tags: waigore/bestore:latest
+        name: Build and push docker image
+        run:
+          docker build . --tag ghcr.io/waigore/bestore:latest
+          docker push ghcr.io/waigore/bestore:latest

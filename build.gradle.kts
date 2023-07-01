@@ -38,6 +38,9 @@ tasks.withType<Test> {
 	useJUnitPlatform()
 }
 
+tasks.getByName<Jar>("jar") {
+	enabled = false
+}
 
 tasks.test {
 	finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
